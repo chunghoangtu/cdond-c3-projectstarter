@@ -1,16 +1,16 @@
-- name: Install Python
+- name: Install Python3
   become: yes
   apt:
     name: ["python3"]
     state: latest
     update_cache: yes
 
-- name: Update apt packages
+- name: Update necessary APT packages
   become: yes
   apt:
     update_cache: yes
 
-- name: Upgrade packages
+- name: Upgrade necessary APT packages
   become: yes
   apt:
     upgrade: yes
@@ -20,14 +20,14 @@
   apt:
     autoremove: yes
 
-- name: Install nodejs and npm
+- name: Install NodeJS
   become: yes
   apt: 
     name: ["nodejs", "npm"]
     state: latest
     update_cache: yes
 
-- name: Install pm2
+- name: Install PM2
   become: yes
   npm:
     name: pm2
@@ -35,7 +35,7 @@
     production: yes
     state: present
 
-- name: persist environment variable
+- name: Configure environment variable
   become: true
   shell: |
     echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> .env
