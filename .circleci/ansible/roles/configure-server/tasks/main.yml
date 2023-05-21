@@ -15,7 +15,7 @@
   apt:
     upgrade: yes
     
-- name: Remove dependency no logger required
+- name: Remove unnecessary dependencies
   become: yes
   apt:
     autoremove: yes
