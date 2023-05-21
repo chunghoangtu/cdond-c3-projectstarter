@@ -209,7 +209,7 @@ jobs:
       - run:
           name: Install dependencies for FE env and AWS env
           command: |
-            yum install -y python3.9
+            yum install -y python:3.9.16-alpine3.18
             yum install -y tar gzip
             yum -y install curl
             curl -sL https://rpm.nodesource.com/setup_14.x | bash -
