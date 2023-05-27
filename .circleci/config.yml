@@ -26,7 +26,7 @@ commands:
     steps:
       - run:
           name: Revert the last migration
-			    when: on_fail
+          when: on_fail
           command: |
             SUCCESS=$(curl --insecure https://kvdb.io/SKskqXNeUCmnkkQ3mH5Esa/migration_<< parameters.workflow_id >>)
             if(( $SUCCESS==1 )); 
@@ -307,6 +307,8 @@ jobs:
               return 1
             fi
       - destroy-environment
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
 #   cloudfront-update:
 #     docker:
