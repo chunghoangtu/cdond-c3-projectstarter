@@ -228,6 +228,8 @@ jobs:
                 --filters Name=tag:Name,Values="be-${CIRCLE_WORKFLOW_ID:0:7}" Name=instance-state-name,Values=running \
                 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
       - run:
           name: Deploy FE
@@ -290,7 +292,9 @@ jobs:
             export BACKEND_IP=$(aws ec2 describe-instances \
                   --filters Name=tag:Name,Values="be-${CIRCLE_WORKFLOW_ID:0:7}" Name=instance-state-name,Values=running \
                   --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            echo $BACKEND_IP
             export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
             if curl "${API_URL}/api/status" | grep "BE site is OK"
             then
               return 0
@@ -300,17 +304,18 @@ jobs:
       - run:
           name: Run FE smoke test.
           command: |
-            URL="http://uda-tuchung-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees" 
+            URL="http://uda-tuchung-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"
+            echo ${URL}
             if curl -s ${URL} | grep "Welcome To FE site"
             then
               return 1
             else
               return 1
             fi
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
+      # - destroy-environment:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
 #   cloudfront-update:
 #     docker:
