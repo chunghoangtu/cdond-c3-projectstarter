@@ -325,10 +325,13 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: Install dependencies
+          name: Install needed dependencies
           command: |
-            apk add --update curl nodejs npm
-            pip install awscli
+            yum install -y python3.7
+            yum install -y tar gzip
+            yum -y install curl
+            curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+            yum install -y nodejs
       - run:
           name: Change the origin of CloudFront distribution to the new S3 bucket using a CloudFormation template
           command: |
@@ -340,7 +343,7 @@ jobs:
 
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
-              --stack-name InitStack-${OldWorkflowID} \
+              --stack-name UdaTuchung-InitStack-${OldWorkflowID} \
               --parameter-overrides WorkflowID="uda-tuchung-${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=uda-tuchung
 
