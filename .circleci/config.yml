@@ -343,7 +343,7 @@ jobs:
 
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
-              --stack-name UdaTuchung-InitStack-${OldWorkflowID} \
+              --stack-name InitStack-${OldWorkflowID} \
               --parameter-overrides WorkflowID="uda-tuchung-${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=uda-tuchung
 
