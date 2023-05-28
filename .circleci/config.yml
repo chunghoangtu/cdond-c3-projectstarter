@@ -140,7 +140,7 @@ jobs:
               --template-file .circleci/files/backend.yml \
               --stack-name "uda-tuchung-be-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-              --tags project=udapeople
+              --tags project=uda-tuchung
       - run:
           name: Make sure FE infras is existed
           command: |
@@ -148,7 +148,7 @@ jobs:
               --template-file .circleci/files/frontend.yml \
               --stack-name "uda-tuchung-fe-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-              --tags project=udapeople
+              --tags project=uda-tuchung
       - run:
           name: Add the EC2 instance IP to the Ansible inventory
           command: |
