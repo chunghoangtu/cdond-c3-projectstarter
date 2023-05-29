@@ -1,5 +1,5 @@
 Description: >
-  uda-tuchung backend stack.
+  udapeople backend stack.
 
 Parameters:
   ID:
@@ -10,7 +10,7 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub Uda-Tuchung-${ID}
+      GroupName: !Sub Udapeople-${ID}
       GroupDescription: Allow port 22 and port 3030.
       SecurityGroupIngress:
         - IpProtocol: tcp
