@@ -286,15 +286,21 @@ jobs:
           command: |
             apk add --update curl nodejs npm
             pip install awscli
-      - run:
-          name: Retrieve the back-end IP address in an earlier job and then run BE smoke test.
+      - run :
+          name: Retrieve the BE IP address in an earlier job
           command: |
-            export BACKEND_IP=$(aws ec2 describe-instances \
+            export BE_IP=$(aws ec2 describe-instances \
                   --filters Name=tag:Name,Values="be-${CIRCLE_WORKFLOW_ID:0:7}" Name=instance-state-name,Values=running \
                   --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-            echo $BACKEND_IP
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            echo "Backend IP: ${BE_IP}"
+      - run:
+          name: Run BE smoke test with given BE IP.
+          command: |
+            export BE_IP=$(aws ec2 describe-instances \
+                  --filters Name=tag:Name,Values="be-${CIRCLE_WORKFLOW_ID:0:7}" Name=instance-state-name,Values=running \
+                  --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export API_URL="http://${BE_IP}:3030"
+            echo "API URL: ${API_URL}"
             if curl "${API_URL}/api/status" | grep "ok"
             then
               return 0
@@ -304,8 +310,8 @@ jobs:
       - run:
           name: Run FE smoke test.
           command: |
-            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"
-            echo ${URL}
+            export FE_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"
+            echo "FE URL: export FE_${URL}""
             if curl -s ${URL} | grep "Welcome"
             then
               return 0
@@ -339,18 +345,21 @@ jobs:
                   list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
                   --no-paginate --output text)
             OldWorkflowID=${OldWorkflowStack:10:7}
-            echo $OldWorkflowID >> ~/OldWorkflowID.txt
-            cat ~/OldWorkflowID.txt
+            echo $OldWorkflowID > oldStack
       - run:
           name: Change the origin of CloudFront distribution to the new S3 bucket using a CloudFormation template
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
-              --stack-name InitStack-${OldWorkflowID} \
+              --stack-name InitialStack-${OldWorkflowID} \
               --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
             echo OldWorkflowID: "${OldWorkflowID}"
             echo Current Workflow ID: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./oldStack
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
