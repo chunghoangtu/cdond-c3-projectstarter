@@ -328,7 +328,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: yum install -y tar gzip
       - attach_workspace:
           at: ~/
       - run:
@@ -369,7 +368,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: yum install -y tar gzip
       - attach_workspace:
           at: ~/
       - run:
@@ -379,8 +377,8 @@ jobs:
       -run:
           name: Read old stackid
           command: |            
-            testOldStackID=$(cat ./OldWorkflowID.txt)
-            echo TestID: ${testOldStackID}
+            OldStack=$(cat ./OldWorkflowID.txt)
+            echo TestID: ${OldStack:0:7}
       - run:
           name: Get old stack workflow id
           command: |
