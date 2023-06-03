@@ -346,8 +346,8 @@ jobs:
             OldWorkflowID=${OldWorkflowStack:10:7}
             echo OldWorkflowID: "${OldWorkflowID}"
             echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
-            echo ${OldWorkflowID} >> ./OldWorkflowID.txt
-            cat ./OldWorkflowID.txt
+            echo ${OldWorkflowID} >> ~/OldWorkflowID.txt
+            cat ~/OldWorkflowID.txt
       - run:
           name: Change the origin of CloudFront distribution to the new S3 bucket using a CloudFormation template
           command: |
@@ -377,7 +377,10 @@ jobs:
       -run:
           name: Read old stackid
           command: |            
-            OldStack=$(cat ./OldWorkflowID.txt)
+            pwd
+            ls
+            cat ~/OldWorkflowID.txt
+            OldStack=$(cat ~/OldWorkflowID.txt)
             echo TestID: ${OldStack:0:7}
       - run:
           name: Get old stack workflow id
