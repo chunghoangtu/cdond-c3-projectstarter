@@ -376,10 +376,7 @@ jobs:
       - run:
           name: Install needed dependencies
           command: |
-            yum install -y python3.9
-            yum -y install curl
-            curl -sL https://rpm.nodesource.com/setup_14.x | bash -
-            yum install -y nodejs
+            yum install -y tar gzip unzip
       - run:
           name: Get old stack workflow id
           command: |
