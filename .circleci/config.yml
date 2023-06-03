@@ -167,7 +167,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.9.0-alpine
     steps:
       - checkout
       - add_ssh_keys:
@@ -244,7 +244,7 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.9.0-alpine
     steps:
       - checkout
       - add_ssh_keys:
@@ -276,7 +276,7 @@ jobs:
 
   smoke-test:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.9.0-alpine
     steps:
       - checkout
       - attach_workspace:
@@ -311,8 +311,8 @@ jobs:
           name: Run FE smoke test.
           command: |
             export FE_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"
-            echo "FE URL: export FE_${URL}"
-            if curl -s ${URL} | grep "Welcome"
+            echo "FE URL: export FE_${FE_URL}"
+            if curl -s ${FE_URL} | grep "Welcome"
             then
               return 0
             else
