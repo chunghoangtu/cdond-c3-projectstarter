@@ -379,7 +379,7 @@ jobs:
       -run:
           name: Read old stackid
           command: |            
-            testOldStackID=$(cat  ./OldWorkflowID.txt)
+            testOldStackID=$(cat ./OldWorkflowID.txt)
             echo TestID: ${testOldStackID}
       - run:
           name: Get old stack workflow id
