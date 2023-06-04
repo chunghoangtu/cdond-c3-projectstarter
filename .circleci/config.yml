@@ -339,7 +339,7 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_14.x | bash -
             yum install -y nodejs
       - run:
-          name: Get old workflow id
+          name: Get old workflow stack id
           command: |
             export OldWorkflowStack=$(aws cloudformation \
                   list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
