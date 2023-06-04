@@ -390,15 +390,18 @@ jobs:
       - run:
           name: Get old stack workflow id
           command: |
-            export OldWorkflowStack=$(aws cloudformation \
+            export OldWorkflow=$(aws cloudformation \
                   list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
                   --no-paginate --output text)
-            OldWorkflowID=${OldWorkflowStack:10:7}
+            OldWorkflowID=${OldWorkflow:10:7}
             echo OldWorkflowID: "${OldWorkflowID}"
-            echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+            echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"            
+            echo "${OldWorkflowID}" > ~/OldWorkflowID.txt
       - run:
           name: Decide upon teh condition to remove old stacks/s3 bucket
           command: |
+            OldWorkflowID=$(cat ~/OldWorkflowID.txt)
+            echo "OldWorkflowID: ${OldWorkflowID}"
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
             then
               echo 'Start Cleaning up'
