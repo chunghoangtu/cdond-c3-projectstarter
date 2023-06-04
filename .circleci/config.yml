@@ -338,32 +338,29 @@ jobs:
             yum -y install curl
             curl -sL https://rpm.nodesource.com/setup_14.x | bash -
             yum install -y nodejs
-      - run:
-          name: Fetch the Old workflow ID
-          command: |
-            export OldWorkflowStack=$(aws cloudformation \
-                  list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-                  --no-paginate --output text)
-            OldWorkflowID=${OldWorkflowStack:10:7}
-            echo OldWorkflowID: "${OldWorkflowID}"
-            echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
-            echo ${OldWorkflowID} >> ./OldWorkflowID.txt
-            cat ./OldWorkflowID.txt
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./OldWorkflowID.txt
+      # - run:
+      #     name: Fetch the Old workflow ID
+      #     command: |
+      #       export OldWorkflowStack=$(aws cloudformation \
+      #             list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+      #             --no-paginate --output text)
+      #       OldWorkflowID=${OldWorkflowStack:10:7}
+      #       echo OldWorkflowID: "${OldWorkflowID}"
+      #       echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+      #       echo ${OldWorkflowID} >> ./OldWorkflowID.txt
+      #       cat ./OldWorkflowID.txt
+      # - persist_to_workspace:
+      #     root: .
+      #     paths:
+      #       - ./OldWorkflowID.txt
       - run:
           name: Change the origin of CloudFront distribution to the new S3 bucket using a CloudFormation template
           command: |
-            pwd
-            ls
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
               --stack-name InitialStack \
               --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
-            echo OldWorkflowID: "${OldWorkflowID}"
             echo Current Workflow ID: "${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
@@ -382,14 +379,14 @@ jobs:
           name: Install needed dependencies
           command: |
             yum install -y tar gzip unzip
-      - run:
-          name: Read old stackid
-          command: |            
-            pwd
-            ls
-            cat ./OldWorkflowID.txt
-            OldID=$(cat ./OldWorkflowID.txt)
-            echo TestID: ${OldID}
+      # - run:
+      #     name: Read old stackid
+      #     command: |            
+      #       pwd
+      #       ls
+      #       cat ./OldWorkflowID.txt
+      #       OldID=$(cat ./OldWorkflowID.txt)
+      #       echo TestID: ${OldID}
       - run:
           name: Get old stack workflow id
           command: |
@@ -413,6 +410,10 @@ jobs:
             else
               echo 'Cannot clean up'
             fi
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 workflows:
   default:
