@@ -1,0 +1,14 @@
+- name: clone zipped artifact file into the EC2 instance
+  copy:
+    src: artifact.tar.gz
+    dest: ~/artifact.tar.gz
+    backup: yes
+
+- name: clone zipped artifact file into the EC2 instance
+  shell: | 
+    tar -zxvf artifact.tar.gz
+
+- name: Install dependencies and start the app
+  shell: |
+    npm install
+    pm2 start npm -- start
