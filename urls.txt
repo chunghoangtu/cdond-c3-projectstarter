@@ -1,2 +1,2 @@
 Public Url to GitHub repository  [URL01]: https://github.com/chunghoangtu/cdond-c3-projectstarter
-Public URL for S3 Bucket . [URL02]: https://udapeople-2e1ed26.s3.amazonaws.com/index.html#/employees
+Public URL for S3 Bucket . [URL02]: https://udapeople-f2e57e3.s3.amazonaws.com/index.html#/employees
