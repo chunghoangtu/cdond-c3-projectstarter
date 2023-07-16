@@ -1,2 +1,0 @@
-The public URL for S3 Bucket [URL02]: https://s3.console.aws.amazon.com/s3/buckets/udapeople-d190d03
-The public URL of FE site: https://udapeople-d190d03.s3.amazonaws.com/index.html#/employees
